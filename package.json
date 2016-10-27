@@ -1,0 +1,26 @@
+{
+  "name": "d3tutorial",
+  "version": "1.0.0",
+  "description": "D3js Tutorial using Angular 1.5",
+  "main": "d3tutorial.js",
+  "dependencies": {
+    "angular": "^1.5.8"
+  },
+  "devDependencies": {
+    "d3": "^4.2.8",
+    "dress-code": "^2.0.0-beta"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s0k0/D3js.git"
+  },
+  "author": "Sophie Kolbe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/s0k0/D3js/issues"
+  },
+  "homepage": "https://github.com/s0k0/D3js#readme"
+}

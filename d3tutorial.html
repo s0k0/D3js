@@ -2,17 +2,21 @@
 <html lang="en" ng-app="chartApp">
 <head>
     <title>D3Tutorial</title>
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/d3/d3.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    <script src="node_modules/angular/angular.js"></script>
+    <script src="node_modules/d3/build/d3.js"></script>
+    <script src="node_modules/d3/build/d3.js"></script>
     <script src="d3tutorial.js"></script>
     <link rel="stylesheet" href="d3tutorial.css">
+    <link href="node_modules/dress-code/dist/css/dress-code.min.css" rel="stylesheet">
 </head>
 <body>
     <div ng-controller="ChartController">
-        <h1>Hello Chart!</h1>
-        <my-chart chart-data="data" width="700" height="500"></my-chart>
-        <my-chart chart-data="data"  width="550" height="400"></my-chart>
-        <my-chart chart-data="data"  width="400" height="300"></my-chart>
+        <h1 class="dc-h1">Hello Chart!</h1>
+        <!--<scatter-plot data="scatter" width="700" height="500"></scatter-plot>-->
+        <!--<scatter-plot data="scatter"  width="550" height="400"></scatter-plot>-->
+        <!--<scatter-plot data="scatter"  width="400" height="300"></scatter-plot>-->
+        <pie-chart data="pie"  width="500" height="500"></pie-chart>
     </div>
 </body>
 </html>
