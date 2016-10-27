@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="chartApp">
+<head>
+    <title>D3Tutorial</title>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/d3/d3.js"></script>
+    <script src="d3tutorial.js"></script>
+    <link rel="stylesheet" href="d3tutorial.css">
+</head>
+<body>
+    <div ng-controller="ChartController">
+        <h1>Hello Chart!</h1>
+        <my-chart chart-data="data" width="800" height="500"></my-chart>
+        <my-chart chart-data="data"  width="600" height="400"></my-chart>
+    </div>
+</body>
+</html>

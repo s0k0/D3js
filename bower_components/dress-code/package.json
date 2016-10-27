@@ -1,0 +1,67 @@
+{
+  "name": "dress-code",
+  "version": "2.0.0-beta",
+  "description": "The Dress Code is a framework agnostic, atomic design, BEM, style library which is designed for maintainability and modularity.",
+  "homepage": "https://zalando.github.io/brand-solutions-dress-code",
+  "main": "dist/sass/dress-code.scss",
+  "scripts": {
+    "lint": "gulp lint",
+    "build": "gulp dist",
+    "build:demo": "gulp demo:build",
+    "deploy:demo": "gulp demo:deploy --demo-base-path=/dress-code",
+    "changelog": "gulp dist:changelog",
+    "start": "gulp"
+  },
+  "keywords": [
+      "toolkit",
+      "styleguide",
+      "framework",
+      "scaffold",
+      "patterns",
+      "css library",
+      "BEM",
+      "atomic design"
+  ],
+  "authors": [
+    "Thomas Nägele <thomas.naegele.extern@zalando.de>",
+    "Ruben Barilani <ruben.barilani@zalando.de>"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zalando/dress-code.git"
+  },
+  "engines": {
+    "node": ">=0.12.0"
+  },
+  "dependencies": {
+    "breakpoint-sass": "^2.6.1"
+  },
+  "devDependencies": {
+    "babel-core": "^5.2.17",
+    "babel-loader": "5.0.0",
+    "browser-sync": "^2.7.1",
+    "del": "^1.1.1",
+    "fabricator-assemble": "1.1.10",
+    "gulp": "^3.8.11",
+    "gulp-autoprefixer": "^2.3.1",
+    "gulp-conventional-changelog": "^1.1.0",
+    "gulp-csso": "^1.0.0",
+    "gulp-debug": "^2.1.2",
+    "gulp-gh-pages": "^0.5.2",
+    "gulp-iconfont": "^5.0.0",
+    "gulp-iconfont-css": "^2.0.0",
+    "gulp-imagemin": "^2.2.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
+    "gulp-sass": "^2.0.0",
+    "gulp-scss-lint": "^0.3.9",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-util": "^3.0.4",
+    "gulp-webpack": "^1.5.0",
+    "lodash": "^4.3.0",
+    "require-dir": "^0.3.0",
+    "run-sequence": "^1.0.2",
+    "susy": "~2.2.6"
+  }
+}
