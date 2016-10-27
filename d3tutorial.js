@@ -10,25 +10,10 @@ app.controller("ChartController", ["$scope","$interval", function($scope) {
 
     // create data
     $scope.data = [];
-    $scope.data.push(randPoint());
-    $scope.data.push(randPoint());
-    $scope.data.push(randPoint());
-    $scope.data.push(randPoint());
-    $scope.data.push(randPoint());
-    $scope.data.push(randPoint());
-    $scope.data.push(randPoint());
-    $scope.data.push(randPoint());
-    $scope.data.push(randPoint());
-    $scope.data.push(randPoint());
-    $scope.data.push(randPoint());
-    $scope.data.push(randPoint());
-    $scope.data.push(randPoint());
-    $scope.data.push(randPoint());
-    $scope.data.push(randPoint());
-    $scope.data.push(randPoint());
-    $scope.data.push(randPoint());
-    $scope.data.push(randPoint());
-    $scope.data.push(randPoint());
+    var totalPoints = 0;
+    for(var i = 0; i < totalPoints; i++){
+        $scope.data.push(randPoint());
+    }
 
 }]);
 
