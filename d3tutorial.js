@@ -16,13 +16,16 @@ app.controller("ChartController", ["$scope","$interval", function($scope) {
     }
 
     $scope.pie = [
-        {age: '<5' , population: 120},
-        {age: '5-13' , population: 260},
+        {age: '<5' , population: 100},
+        {age: '5-13' , population: 160},
         {age: '14-17' , population: 300},
-        {age: '28-24' , population:  250},
-        {age: '25-44' , population: 600},
-        {age: '45-64' ,population:  320},
-        {age: '>=65' , population: 150}
+        {age: '18-24' , population:  250},
+        {age: '25-35' , population:  200},
+        {age: '35-44' , population: 790},
+        {age: '45-55' , population: 500},
+        {age: '55-64' ,population:  320},
+        {age: '65-75' , population: 150},
+        {age: '>=75' , population: 50}
     ];
 
 
@@ -151,32 +154,34 @@ app.directive("pieChart", function($window) {
         controllerAs: 'cc',
         bindToController: {
             data: '=',
-            width: '=',
-            height: '='
+            diameter: '='
         },
         link: function(scope, element, attrs, model){
             //create variables for svg settings
             var data = scope.cc.data;
-            var width = scope.cc.width;
-            var height = scope.cc.height;
-            var radius = Math.min(width, height) /2;
-            var innerRadius = radius - 80;
-            var outerRadius = radius - 10;
-            var labelRadius = radius - 40;
+            var diameter = scope.cc.diameter;
+            var radius = diameter /2;
+            var outerRadius = radius*0.4;
+            var innerRadius = radius*0.8;
+            var labelRadius = radius*0.7;
 
 
             //d3 settings
             var d3 = $window.d3;
+            //define ordinal scale (ordered sequence of data points) and assigns one or multiple colors to the ordinals
             var color = d3.scaleOrdinal()
-                .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+                .range(['#ff8c00']);
+            //create arc according to give size parameters, drawing the lines of the arc with specified radius
             var arc = d3.arc()
                 .outerRadius(outerRadius)
                 .innerRadius(innerRadius);
 
+            //put labels on positions according to the arcs with a specific label radius
             var labelArc = d3.arc()
                 .outerRadius(labelRadius)
                 .innerRadius(labelRadius);
 
+            //create the actual chart and calculate the size of each pie 'piece' according to their data value (the bigger the value, the bigger the piece)
             var pie = d3.pie()
                 .padAngle(.02)
                 .value(function(d) { return d.population; })
@@ -185,31 +190,44 @@ app.directive("pieChart", function($window) {
 
             //create svg root element width given height and width
             var svg = d3.select(element[0]).append('svg')
-                .attr('width', width)
-                .attr('height', height);
+                .attr('width', diameter)
+                .attr('height', diameter);
 
-            // create group for chart and append to root
+            // create group for chart and append to root as well as translate it form 0,0 to the center of the root
             svg.append('g')
                 .attr('class', 'data')
-                .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+                .attr('transform', 'translate(' + diameter/2 + ',' + diameter/2 + ')');
 
+
+            function arcTween(outerRadius, delay) {
+                return function () {
+                    // d3.select(this).transition().delay(delay).attrTween("d", function (d) {
+                    //     var i = d3.interpolateNumber(d.outerRadius, outerRadius);
+                    //     return function (t) {
+                    //         d.outerRadius = i(t);
+                    //         return arc(d);
+                    //     };
+                    // });
+                };
+            };
             // draw function to create plot
-            var draw = function(svg, data){
-                // Add new the data points
+            function draw (svg, data , outerRadius){
+                //create sub group of the svg root, each containing an arc aka on pie 'piece'
                var g =  svg.select('.data')
                     .selectAll('.arc')
                     .data(pie)
-                    .enter()
-                    .append('g')
-                    .attr('class', 'arc');
-
-                g.append("path")
+                    .enter();
+                //add calculated arc within piece and adjust attributes like color fill and behaviour
+                 g.append("path")
                     .attr("d", arc)
                     .style("fill", function(d) { return color(d.data.age); });
+                //TODO: animate pie chart on mouse over
+                    // .on("mouseover", arcTween(outerRadius, 0))
+                    // .on("mouseout",  arcTween(outerRadius - 20, 150));
 
+                //adjust label to fit position of each arc
                 g.append("text")
                     .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
-                    .attr("dy", ".35em")
                     .text(function(d) { return d.data.age; });
             };
 

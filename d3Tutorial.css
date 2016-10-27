@@ -9,3 +9,22 @@
 circle {
   fill: red;
 }
+
+pie-chart{
+  display: flex;
+  flex: 1 1 auto;
+}
+
+pie-chart path {
+  fill: #fff;
+  stroke: #333;
+  stroke-width: 1.5px;
+  transition: fill 250ms linear;
+  transition-delay: 150ms;
+}
+
+pie-chart path:hover {
+  fill: #999;
+  stroke: #fff;
+  transition-delay: 0ms;
+}
