@@ -1,6 +1,6 @@
 var app = angular.module("chartApp", []);
 
-app.controller("ChartController", ["$scope","$interval", function($scope) {
+app.controller("ChartController", ["$scope", function($scope) {
 
     // Random data point generator
     var randPoint = function() {
@@ -100,7 +100,7 @@ app.directive("scatterPlot", function($window) {
 
                 //draw x axis
                 svg.select('.x-axis')
-                //move axis to actual position in sketch (yeay, where else shall it be than bottom line like in every other fucking diagram ...)
+                //move axis to bottom left position in diagram (like in every other regular diagram ...)
                     .attr("transform", "translate(0, " + (height - margin) + ")")
                     .call(xAxis);
 
