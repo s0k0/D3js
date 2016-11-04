@@ -50,98 +50,123 @@ app.directive("scatterPlot", function($window) {
             var d3 = $window.d3;
 
             //create svg root element
-            var svg = d3.select(element[0]).append('svg');
-            // add groups containing the other svg elements like the data plot and each of the axes
-            svg.append('g').attr('class', 'data');
-            svg.append('g').attr('class', 'x-axis axis');
-            svg.append('g').attr('class', 'y-axis axis');
+            function setUpRootElement () {
+                var svg = d3.select(element[0]).append('svg');
+                // add groups containing the other svg elements like the data plot and each of the axes
+                svg.append('g').attr('class', 'data');
+                svg.append('g').attr('class', 'x-axis axis');
+                svg.append('g').attr('class', 'y-axis axis');
 
-            //add titles to the axes
-            svg.append("text")
-                .attr("text-anchor", "middle")
-                .attr("transform", "translate("+ (margin/5) +","+(height/2)+")rotate(-90)")
-                .text("Y Axis");
+                //add titles to the axes
+                svg.append("text")
+                    .attr("text-anchor", "middle")
+                    .attr("transform", "translate("+ (margin/3) +","+(height/2)+")rotate(-90)")
+                    .text("Y Axis");
 
-            svg.append("text")
-                .attr("text-anchor", "middle")
-                .attr("transform", "translate("+ (width/2) +","+(height-(margin/5))+")")
-                .text("X Axis");
+                svg.append("text")
+                    .attr("text-anchor", "middle")
+                    .attr("transform", "translate("+ (width/2) +","+(height-(margin/5))+")")
+                    .text("X Axis");
 
+                return svg;
+            }
 
-            var draw = function(svg, width, height, margin, data){
-                //set initial attributes of svg object
-                svg.attr('width', width);
-                svg.attr('height', height);
+            function getTimeData(data) {
+                return d3.extent(data, function(d) { return d.time; });
+            }
+            function getValueData(data) {
+                return d3.max(data, function(d) { return d.visitors; });
+            }
 
+            function createScale(scaleType , width , height, data){
+                var scale;
 
-                //define x-scale
-                var x = d3.scaleTime()
-                    // declare x values of scale
-                    .domain(d3.extent(data, function(d) { return d.time; }))
-                    // define space for scale label
-                    .range([margin, width-margin]);
+                if(scaleType == 'time'){
+                    scale = d3.scaleTime().domain(data);
+                }
+                if(scaleType == 'linear'){
+                    scale = d3.scaleLinear().domain([0,data]);
+                }
+                scale.range([height, width]);
 
-                //define x axis
-                var xAxis = d3.axisBottom(x)
-                    // pass x scale settings
-                    .scale(x)
-                    // declare label ticks
-                    .tickFormat(d3.format('.0s'));
+                return scale;
+            }
 
-                //define y scale
-                var y = d3.scaleLinear()
-                    .domain([0, d3.max(data, function(d) { return d.visitors; })])
-                    .range([ height-margin , margin]);
+            function createAxis(scale, position){
+                var axis;
 
-                //define y axis
-                var yAxis = d3.axisLeft(y)
-                    .scale(y)
-                    .tickFormat(d3.format('.0s'));
+                if(position == 'bottom'){
+                    axis = d3.axisBottom(scale);
+                }
+                if(position == 'left'){
+                    axis = d3.axisLeft(scale);
+                }
+                axis.scale(scale).tickFormat(d3.format('.0s'));
+                return axis;
+            }
 
-                //draw x axis
-                svg.select('.x-axis')
-                //move axis to bottom left position in diagram (like in every other regular diagram ...)
-                    .attr("transform", "translate(0, " + (height - margin) + ")")
-                    .call(xAxis);
+            function drawAxis(svg, axisClass , axis, width , height){
+                svg.select(axisClass)
+                    .attr("transform", "translate("+ width +", " + height + ")")
+                    .call(axis);
+            }
 
-
-                //draw y axis
-                svg.select('.y-axis')
-                    // move axis by margin distance to be visible within the width/height parameters
-                    .attr("transform", "translate(" + margin + ")")
-                    .call(yAxis);
-
-                // Add new the data points
-                svg.select('.data')
-                    .selectAll('circle')
+            function createDataContainer(svg, dataClass, data , displayType){
+                svg.select(dataClass)
+                    .selectAll(displayType)
                     .data(data)
                     .enter()
-                    .append('circle');
+                    .append(displayType);
+            }
 
-                // Updated all data points
-                svg.select('.data')
-                    .selectAll('circle')
+            function drawDataInContainer(svg, dataClass, data , displayType , x ,y){
+                svg.select(dataClass)
+                    .selectAll(displayType)
                     .data(data)
                     .attr('r', 3.5)
                     .attr('cx', function(d) { return x(d.time); })
-                    .attr('cy', function(d) { return y(d.visitors); })
-                    .style('fill', function(d) {
-                        var returnColor;
-                        if(d.time === 5){
-                            returnColor = 'lightblue';
-                        } else if ( d.time === 8) {
-                            returnColor = 'green';
-                        } else if ( d.time === 3) {
-                            returnColor = 'yellow';
-                        } else {
-                            returnColor = 'red';
-                        }
-                        return returnColor;
-                    });
+                    .attr('cy', function(d) { return y(d.visitors); });
+                    // .style('fill', function(d) {
+                    //     var returnColor;
+                    //     if(d.time === 5){
+                    //         returnColor = 'lightblue';
+                    //     } else if ( d.time === 8) {
+                    //         returnColor = 'green';
+                    //     } else if ( d.time === 3) {
+                    //         returnColor = 'yellow';
+                    //     } else {
+                    //         returnColor = 'red';
+                    //     }
+                    //     return returnColor;
+                    // });
+            }
+
+            function drawDiagram(svg, width, height, margin, data){
+                svg.attr('width', width);
+                svg.attr('height', height);
+
+                var time = getTimeData(data);
+                var values = getValueData(data);
+
+                var x = createScale('time', width-margin, margin, time);
+                var y = createScale('linear', margin, height-margin, values);
+
+                var xAxis = createAxis(x, 'bottom');
+                var yAxis = createAxis(y, 'left');
+
+
+                drawAxis(svg, '.x-axis', xAxis, 0 , height-margin);
+                drawAxis(svg, '.y-axis', yAxis , margin , 0);
+
+
+                createDataContainer(svg, '.data', data, 'circle');
+                drawDataInContainer(svg, '.data', data, 'circle', x, y);
 
             };
 
-            draw(svg,width, height, margin ,data);
+            var svg = setUpRootElement();
+
+            drawDiagram(svg,width, height, margin ,data);
         }
     };
 });
