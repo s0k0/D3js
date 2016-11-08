@@ -39,134 +39,101 @@ app.directive("scatterPlot", function($window) {
         bindToController: {
             data: '=',
             width: '=',
-            height: '='
+            height: '=',
+            x: '=',
+            y: '=',
+            color: '='
         },
         link: function(scope, element, attrs, model){
             //create variables for settings
             var data = scope.cc.data;
             var width = scope.cc.width;
             var height = scope.cc.height;
-            var margin = 60;
+            var x = scope.cc.x;
+            var y = scope.cc.y;
+            var color = scope.cc.color;
             var d3 = $window.d3;
 
             //create svg root element
             function setUpRootElement () {
+                var margin = 60;
                 var svg = d3.select(element[0]).append('svg');
-                // add groups containing the other svg elements like the data plot and each of the axes
                 svg.append('g').attr('class', 'data');
                 svg.append('g').attr('class', 'x-axis axis');
                 svg.append('g').attr('class', 'y-axis axis');
-
-                //add titles to the axes
                 svg.append("text")
                     .attr("text-anchor", "middle")
                     .attr("transform", "translate("+ (margin/3) +","+(height/2)+")rotate(-90)")
-                    .text("Y Axis");
+                    .text(y);
 
                 svg.append("text")
                     .attr("text-anchor", "middle")
                     .attr("transform", "translate("+ (width/2) +","+(height-(margin/5))+")")
-                    .text("X Axis");
+                    .text(x);
 
                 return svg;
             }
 
-            function getTimeData(data) {
-                return d3.extent(data, function(d) { return d.time; });
+            function getTimeVector(data, attribute) {
+                return d3.extent(data, function(d) { return d[attribute]; });
             }
-            function getValueData(data) {
-                return d3.max(data, function(d) { return d.visitors; });
+            function getValueVector(data , attribute) {
+                return d3.max(data, function(d) { return d[attribute]; });
             }
 
-            function createScale(scaleType , width , height, data){
-                var scale;
-
+            function createScale(scaleType , width , height, dataVector){
                 if(scaleType == 'time'){
-                    scale = d3.scaleTime().domain(data);
+                    return d3.scaleTime().domain(dataVector).range([height, width]);
                 }
                 if(scaleType == 'linear'){
-                    scale = d3.scaleLinear().domain([0,data]);
+                    return d3.scaleLinear().domain([0,dataVector]).range([height, width]);
                 }
-                scale.range([height, width]);
-
-                return scale;
             }
 
             function createAxis(scale, position){
-                var axis;
-
                 if(position == 'bottom'){
-                    axis = d3.axisBottom(scale);
+                    return d3.axisBottom(scale).scale(scale).tickFormat(d3.format('.0s'));
                 }
                 if(position == 'left'){
-                    axis = d3.axisLeft(scale);
+                    return d3.axisLeft(scale).scale(scale).tickFormat(d3.format('.0s'));
                 }
-                axis.scale(scale).tickFormat(d3.format('.0s'));
-                return axis;
             }
 
-            function drawAxis(svg, axisClass , axis, width , height){
-                svg.select(axisClass)
+            function drawAxis(svg, elementClass , axis, width , height){
+                svg.select(elementClass)
                     .attr("transform", "translate("+ width +", " + height + ")")
                     .call(axis);
             }
 
-            function createDataContainer(svg, dataClass, data , displayType){
-                svg.select(dataClass)
-                    .selectAll(displayType)
+            function drawData(svg, elementClass , data, x , y ,  scaleX ,scaleY , color){
+                svg.select(elementClass)
+                    .selectAll('circle')
                     .data(data)
                     .enter()
-                    .append(displayType);
-            }
-
-            function drawDataInContainer(svg, dataClass, data , displayType , x ,y){
-                svg.select(dataClass)
-                    .selectAll(displayType)
-                    .data(data)
+                    .append('circle')
                     .attr('r', 3.5)
-                    .attr('cx', function(d) { return x(d.time); })
-                    .attr('cy', function(d) { return y(d.visitors); });
-                    // .style('fill', function(d) {
-                    //     var returnColor;
-                    //     if(d.time === 5){
-                    //         returnColor = 'lightblue';
-                    //     } else if ( d.time === 8) {
-                    //         returnColor = 'green';
-                    //     } else if ( d.time === 3) {
-                    //         returnColor = 'yellow';
-                    //     } else {
-                    //         returnColor = 'red';
-                    //     }
-                    //     return returnColor;
-                    // });
+                    .attr('cx', function(d) { return scaleX(d[x])})
+                    .attr('cy', function(d) { return scaleY(d[y])})
+                    .style('fill', color );
             }
 
-            function drawDiagram(svg, width, height, margin, data){
+
+            function drawDiagram(svg, width, height, data , x, y , color){
+                var margin = 60;
                 svg.attr('width', width);
                 svg.attr('height', height);
 
-                var time = getTimeData(data);
-                var values = getValueData(data);
+                var xScale = createScale('time', width-margin, margin, getTimeVector(data, x));
+                var yScale = createScale('linear', margin, height-margin, getValueVector(data, y));
 
-                var x = createScale('time', width-margin, margin, time);
-                var y = createScale('linear', margin, height-margin, values);
-
-                var xAxis = createAxis(x, 'bottom');
-                var yAxis = createAxis(y, 'left');
-
-
-                drawAxis(svg, '.x-axis', xAxis, 0 , height-margin);
-                drawAxis(svg, '.y-axis', yAxis , margin , 0);
-
-
-                createDataContainer(svg, '.data', data, 'circle');
-                drawDataInContainer(svg, '.data', data, 'circle', x, y);
-
+                drawAxis(svg, '.x-axis',  createAxis(xScale, 'bottom'), 0 , height-margin);
+                drawAxis(svg, '.y-axis', createAxis(yScale, 'left') , margin , 0);
+                drawData(svg, '.data', data, x , y, xScale, yScale , color);
             };
 
             var svg = setUpRootElement();
 
-            drawDiagram(svg,width, height, margin ,data);
+            drawDiagram(svg, width, height ,data , x, y , color);
         }
     };
 });
