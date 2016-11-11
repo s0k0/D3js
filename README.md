@@ -1,6 +1,6 @@
 # D3js Tutorial with Angular 1.5
 
-This repository contains my current knowledge about D3js. As soon as I learned something new or figured out a new pattern, I will summarize my insights here. 
+This repository contains my current knowledge about D3js. As soon as I learned something new or figured out a new pattern, I will summarize my insights here. My main resource while learning is the official documentation https://d3js.org/ . Here are gathered various tutorials and examples how to use D3js. 
 
 
 # Fundamentals
