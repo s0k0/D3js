@@ -20,9 +20,12 @@ Then, depending on your app set up, you import D3js using a service or simply li
 ```html
 <script src="node_modules/d3/build/d3.js"></script>
 ```
-If you succesfully loaded D3js, check out the d3 object in your browser console:
+After D3js library is loaded successfully, you are ready to manipulate documents. You can be check the import in your browser console by typing 'd3' to call the d3 object:
 
+![D3js Object in Browser Console](https://cloud.githubusercontent.com/assets/19322615/20215412/67714524-a814-11e6-87bb-43b35540695c.png)
 
-# Basic Concept
+# A simple chart
+
+From  here on, you are working on the d3 object. Create a simple app first with a controller, some html and css file. To make the chart reusable, lets create a directive.
 
 
