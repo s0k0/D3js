@@ -28,11 +28,49 @@ After D3js library is loaded successfully, you are ready to manipulate documents
 
 From  here on, you are working on the d3 object. I will explain in the following section how I created this sample chart using Angular 1.5 and the D3js library.
 
-![Sample Chart](https://cloud.githubusercontent.com/assets/19322615/20216305/196c557a-a81a-11e6-9508-6ca620f89391.png)
+![Sample Chart](https://cloud.githubusercontent.com/assets/19322615/20216418/c357fdd2-a81a-11e6-8c36-04c3ab612504.png)
 
 -------------------
 Hello MyChart App
 --------------------------
-Create a simple app first with a controller, some html and css file. Then, to make the chart reusable, lets create a directive for the chart.
+Create a simple app first with a controller, some html and css file. 
+```javascript
+var app = angular.module("chartApp", []);
+app.controller("ChartController", ["$scope", function ($scope) {
 
+}]);
+```
+
+```html
+<!DOCTYPE html>
+<html lang="en" ng-app="chartApp">
+<head>
+    <title>D3Tutorial</title>
+    <script src="node_modules/angular/angular.js"></script>
+    <script src="node_modules/d3/build/d3.js"></script>
+    <script src="d3tutorial.js"></script>
+    <link rel="stylesheet" href="d3tutorial.css">
+</head>
+<body>
+<div ng-controller="ChartController">
+    <h1>Hello Chart!</h1>
+</div>
+</body>
+</html>
+```
+
+Then, to make the chart reusable, lets create a directive for the chart.
+```javascript
+app.directive("scatterPlot", function ($window) {
+    return {
+        restrict: "E",
+        controller: "ChartController",
+        controllerAs: 'cc',
+        bindToController: {},
+        link: function (scope, element, attrs, model) {
+     
+        }
+    };
+});
+```
 
