@@ -28,7 +28,7 @@ After D3js library is loaded successfully, you are ready to manipulate documents
 
 From  here on, you are working on the d3 object. I will explain in the following section how I created this sample chart using Angular 1.5 and the D3js library.
 
-![Sample Chart](https://cloud.githubusercontent.com/assets/19322615/20216418/c357fdd2-a81a-11e6-8c36-04c3ab612504.png)
+![Sample Chart](https://cloud.githubusercontent.com/assets/19322615/20216735/9004a668-a81c-11e6-924f-a7282c51c718.png)
 
 -------------------
 Hello MyChart App
