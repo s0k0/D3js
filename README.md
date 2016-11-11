@@ -26,6 +26,13 @@ After D3js library is loaded successfully, you are ready to manipulate documents
 
 # A simple chart
 
-From  here on, you are working on the d3 object. Create a simple app first with a controller, some html and css file. To make the chart reusable, lets create a directive.
+From  here on, you are working on the d3 object. I will explain in the following section how I created this sample chart using Angular 1.5 and the D3js library.
+
+![Sample Chart](https://cloud.githubusercontent.com/assets/19322615/20216133/29222d06-a819-11e6-8f6e-c22fea18963c.png)
+
+-------------------
+Titles and Section headers
+--------------------------
+Create a simple app first with a controller, some html and css file. To make the chart reusable, lets create a directive.
 
 
